@@ -17,9 +17,6 @@ The library exports the following functions:
 - **`iterPrimes(): Generator<number>`**  
   A generator that iterates over prime numbers sequentially.
 
-It is up to you to choose appropriate algorithms for prime number verification and generation. It is recommended to research and use well-known algorithms rather than inventing your own.  
-Besides the predefined API, you are free to implement the library in your own way, but ensure that the library caches previously computed prime numbers until the program terminates.
-
 ## Installation
 
 To use this library, you need **Node.js** installed on your system.
