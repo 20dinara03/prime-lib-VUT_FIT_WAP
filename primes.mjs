@@ -8,3 +8,13 @@ export async function isPrime(n){
     }
     return (d * d > n);
 }
+
+export async function getPrimes(n){
+    let primes = [];
+    for (var i = 2; i <= n; i++){
+        if (await isPrime(i)){
+            primes.push(i);
+        }
+    }
+    return primes;
+}

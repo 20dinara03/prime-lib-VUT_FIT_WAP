@@ -4,7 +4,7 @@
  */
 
 /// Využijeme knihovnu, která je předmětem zadání projektu
-import { isPrime} from "./primes.mjs";
+import { isPrime, getPrimes} from "./primes.mjs";
 //, getPrimes, iterPrimes 
 
 /// IIFE, které obsahuje testovací volání
@@ -18,8 +18,8 @@ import { isPrime} from "./primes.mjs";
 	isPrime(6).then(result => console.log("6: ", result));
 	isPrime(7).then(result => console.log("7: ", result));
 	isPrime(2).then(result => console.log("2: ", result));
-	// /// 2: getPrimes vrací prvočísla V Promise
-	// getPrimes(1000).then(primes => console.log(primes.join(", ")));
+	/// 2: getPrimes vrací prvočísla V Promise
+	getPrimes(1000).then(primes => console.log(primes.join(", ")));
 	// /// 3: generátor iterPrimes
 	// for (let prime of iterPrimes()) {
 	// 	if (prime > 1000) {
