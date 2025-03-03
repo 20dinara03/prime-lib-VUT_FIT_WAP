@@ -1,20 +1,34 @@
+let cachedPrimes = [];
+
 export async function isPrime(n){
-    if (n % 2 == 0){
-        return (n == 2);
+    if (n < 2) return false;
+    if (cachedPrimes.includes(n)) return true;
+
+    for (let prime of cachedPrimes) {
+        if (prime * prime > n) break; 
+        if (n % prime === 0) return false;
     }
-    var d = 3;
-    while (d * d <= n && n % d != 0){
-        d+=2;
+
+    let d = cachedPrimes[cachedPrimes.length - 1] + 1;
+    if (d % 2 === 0) d++; 
+
+    while (d * d <= n) {
+        if (n % d === 0) return false;
+        d += 2;
     }
-    return (d * d > n);
+
+    cachedPrimes.push(n);
+    return true;
 }
 
 export async function getPrimes(n){
-    let primes = [];
-    for (var i = 2; i <= n; i++){
-        if (await isPrime(i)){
-            primes.push(i);
+    let lastCachedPrime = cachedPrimes[cachedPrimes.length - 1];
+    if (n > lastCachedPrime) {
+        for (let i = lastCachedPrime + 1; i <= n; i++) {
+            if (await isPrime(i)) {
+                cachedPrimes.push(i);
+            }
         }
     }
-    return primes;
+    return cachedPrimes.filter(prime => prime <= n);
 }
