@@ -18,11 +18,24 @@ export async function isPrime(n) {
 export async function getPrimes(n) {
     let lastCachedPrime = cachedPrimes.length > 0 ? cachedPrimes[cachedPrimes.length - 1] : 1;
 
-    for (let i = lastCachedPrime + 1; i <= n; i++) {
-        if (await isPrime(i) && !cachedPrimes.includes(i)) {
-            cachedPrimes.push(i);
+    if (lastCachedPrime < n) {
+        let sieve = Array(n + 1).fill(true);
+        sieve[0] = sieve[1] = false; 
+
+        for (let p = 2; p * p <= n; p++) {
+            if (sieve[p]) {
+                for (let multiple = p * p; multiple <= n; multiple += p) {
+                    sieve[multiple] = false;
+                }
+            }
+        }
+        for (let i = lastCachedPrime + 1; i <= n; i++) {
+            if (sieve[i] && !cachedPrimes.includes(i)) {
+                cachedPrimes.push(i);
+            }
         }
     }
+
     return cachedPrimes.filter(prime => prime <= n);
 }
 
