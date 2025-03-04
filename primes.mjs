@@ -1,4 +1,4 @@
-let cachedPrimes = [];
+let cachedPrimes = [2];
 
 export async function isPrime(n) {
     if (n < 2) return false;
@@ -30,19 +30,17 @@ export function* iterPrimes() {
     let index = 0;
     let current = cachedPrimes.length > 0 ? cachedPrimes[cachedPrimes.length - 1] : 2;
 
+    while (index < cachedPrimes.length)
+        yield cachedPrimes[index++];
     while (true) {
-        if (index < cachedPrimes.length) {
-            yield cachedPrimes[index++];
-        } else {
-            while (!isPrimeSync(current)) { 
-                current++;
-            }
-            if (!cachedPrimes.includes(current)) {
-                cachedPrimes.push(current);
-            }
-            yield current;
+        while (!isPrimeSync(current)) { 
             current++;
         }
+        if (!cachedPrimes.includes(current)) {
+            cachedPrimes.push(current);
+        }
+        yield current; 
+        current++; 
     }
 }
 
