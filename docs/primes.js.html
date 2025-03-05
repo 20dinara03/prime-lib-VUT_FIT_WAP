@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: primes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: primes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Prime number utility library.
  * Provides functions for checking prime numbers, generating prime lists, and iterating over primes efficiently.
  * Uses **caching** and **Sieve of Eratosthenes** for performance optimization.
@@ -15,7 +43,7 @@ let cachedPrimes = [2];
 /**
  * A **Set** for fast lookup of known prime numbers.
  * Storing primes in a `Set` allows O(1) lookups when checking for primality.
- * @constant {Set<number>}
+ * @constant {Set&lt;number>}
  */
 let primeSet = new Set(cachedPrimes);
 
@@ -32,14 +60,14 @@ let primeSet = new Set(cachedPrimes);
  *
  * @async
  * @param {number} n - The number to check. Must be an integer ≥ 2.
- * @returns {Promise<boolean>} Resolves to `true` if `n` is prime, otherwise `false`.
+ * @returns {Promise&lt;boolean>} Resolves to `true` if `n` is prime, otherwise `false`.
  * @throws {TypeError} If `n` is not a valid integer ≥ 2.
  * @example
  * console.log(await isPrime(11)); // true
  * console.log(await isPrime(15)); // false
  */
 export async function isPrime(n) {
-    if (!Number.isInteger(n) || n < 2) {
+    if (!Number.isInteger(n) || n &lt; 2) {
         throw new TypeError("Input must be an integer ≥ 2.");
     }
     if (primeSet.has(n)) return true;
@@ -47,7 +75,7 @@ export async function isPrime(n) {
     if (n % 2 === 0) return n === 2;
 
     let d = 3;
-    while (d * d <= n) {
+    while (d * d &lt;= n) {
         if (n % d === 0) return false;
         d += 2;
     }
@@ -68,39 +96,39 @@ export async function isPrime(n) {
  *
  * @async
  * @param {number} n - The upper limit for prime computation. Must be an integer ≥ 2.
- * @returns {Promise<number[]>} Resolves to an array of all prime numbers ≤ `n`.
+ * @returns {Promise&lt;number[]>} Resolves to an array of all prime numbers ≤ `n`.
  * @throws {TypeError} If `n` is not a valid integer ≥ 2.
  * @example
  * console.log(await getPrimes(30)); // [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
  */
 export async function getPrimes(n) {
-    if (!Number.isInteger(n) || n < 2) {
+    if (!Number.isInteger(n) || n &lt; 2) {
         throw new TypeError("Input must be an integer ≥ 2.");
     }
 
     let lastCachedPrime = cachedPrimes[cachedPrimes.length - 1];
 
-    if (lastCachedPrime < n) {
+    if (lastCachedPrime &lt; n) {
         let sieve = Array(n + 1).fill(true);
         sieve[0] = sieve[1] = false;
 
-        for (let p = 2; p * p <= n; p++) {
+        for (let p = 2; p * p &lt;= n; p++) {
             if (sieve[p]) {
-                for (let multiple = p * p; multiple <= n; multiple += p) {
+                for (let multiple = p * p; multiple &lt;= n; multiple += p) {
                     sieve[multiple] = false;
                 }
             }
         }
 
-        for (let i = lastCachedPrime + 1; i <= n; i++) {
-            if (sieve[i] && !primeSet.has(i)) {
+        for (let i = lastCachedPrime + 1; i &lt;= n; i++) {
+            if (sieve[i] &amp;&amp; !primeSet.has(i)) {
                 cachedPrimes.push(i);
                 primeSet.add(i);
             }
         }
     }
 
-    return cachedPrimes.filter(prime => prime <= n);
+    return cachedPrimes.filter(prime => prime &lt;= n);
 }
 
 /**
@@ -127,7 +155,7 @@ export function* iterPrimes() {
     let index = 0;
     let current = cachedPrimes[cachedPrimes.length - 1];
 
-    while (index < cachedPrimes.length) yield cachedPrimes[index++];
+    while (index &lt; cachedPrimes.length) yield cachedPrimes[index++];
 
     while (true) {
         while (!isPrimeSync(current)) {
@@ -160,7 +188,7 @@ export function* iterPrimes() {
  * console.log(isPrimeSync(12)); // false
  */
 function isPrimeSync(n) {
-    if (!Number.isInteger(n) || n < 2) {
+    if (!Number.isInteger(n) || n &lt; 2) {
         throw new TypeError("Input must be an integer ≥ 2.");
     }
 
@@ -168,9 +196,32 @@ function isPrimeSync(n) {
 
     if (n % 2 === 0) return n === 2;
     let d = 3;
-    while (d * d <= n) {
+    while (d * d &lt;= n) {
         if (n % d === 0) return false;
         d += 2;
     }
     return true;
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-primes.html">primes</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Mar 05 2025 10:57:11 GMT+0300 (Moscow Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
