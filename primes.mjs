@@ -31,17 +31,18 @@ let primeSet = new Set(cachedPrimes);
  * **Time Complexity:** _O(√n)_ worst-case
  *
  * @async
- * @param {number} n - The number to check. Must be an integer ≥ 2.
+ * @param {number} n - The number to check. Must be an integer ≥ 0.
  * @returns {Promise<boolean>} Resolves to `true` if `n` is prime, otherwise `false`.
- * @throws {TypeError} If `n` is not a valid integer ≥ 2.
+ * @throws {TypeError} If `n` is not a valid integer ≥ 0.
  * @example
  * console.log(await isPrime(11)); // true
  * console.log(await isPrime(15)); // false
  */
 export async function isPrime(n) {
-    if (!Number.isInteger(n) || n < 2) {
-        throw new TypeError("Input must be an integer ≥ 2.");
+    if (!Number.isInteger(n) || n < 0) {
+        throw new TypeError("Input must be an integer ≥ 0.");
     }
+    if (n === 0 || n === 1) return false;
     if (primeSet.has(n)) return true;
 
     if (n % 2 === 0) return n === 2;
@@ -67,15 +68,15 @@ export async function isPrime(n) {
  * - If the cache already contains primes ≤ `n`, only new primes are computed.
  *
  * @async
- * @param {number} n - The upper limit for prime computation. Must be an integer ≥ 2.
+ * @param {number} n - The upper limit for prime computation. Must be an integer ≥ 0.
  * @returns {Promise<number[]>} Resolves to an array of all prime numbers ≤ `n`.
- * @throws {TypeError} If `n` is not a valid integer ≥ 2.
+ * @throws {TypeError} If `n` is not a valid integer ≥ 0.
  * @example
  * console.log(await getPrimes(30)); // [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
  */
 export async function getPrimes(n) {
-    if (!Number.isInteger(n) || n < 2) {
-        throw new TypeError("Input must be an integer ≥ 2.");
+    if (!Number.isInteger(n) || n < 0) {
+        throw new TypeError("Input must be an integer ≥ 0.");
     }
 
     let lastCachedPrime = cachedPrimes[cachedPrimes.length - 1];
@@ -152,17 +153,18 @@ export function* iterPrimes() {
  *
  * **Time Complexity:** _O(√n)_ worst-case
  *
- * @param {number} n - The number to check. Must be an integer ≥ 2.
+ * @param {number} n - The number to check. Must be an integer ≥ 0.
  * @returns {boolean} `true` if `n` is prime, otherwise `false`.
- * @throws {TypeError} If `n` is not a valid integer ≥ 2.
+ * @throws {TypeError} If `n` is not a valid integer ≥ 0.
  * @example
  * console.log(isPrimeSync(7)); // true
  * console.log(isPrimeSync(12)); // false
  */
 function isPrimeSync(n) {
-    if (!Number.isInteger(n) || n < 2) {
-        throw new TypeError("Input must be an integer ≥ 2.");
+    if (!Number.isInteger(n) || n < 0) {
+        throw new TypeError("Input must be an integer ≥ 0.");
     }
+    if (n === 0 || n === 1) return false;
 
     if (primeSet.has(n)) return true;
 
