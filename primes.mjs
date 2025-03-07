@@ -76,7 +76,7 @@ export async function getPrimes(n) {
     if (!Number.isInteger(n) || n < 0) {
         throw new TypeError("Input must be an integer ≥ 0.");
     }
-
+    
     let lastCachedPrime = cachedPrimes[cachedPrimes.length - 1];
 
     if (lastCachedPrime < n) {

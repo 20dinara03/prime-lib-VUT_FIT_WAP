@@ -54,25 +54,37 @@ function measureExecutionTime(fn, args) {
 
 (async function() {
     console.log("🔹 Testing isPrime()...");
-    // Edge cases
+   // Edge cases
     assertEqual(await isPrime(0), false, "isPrime(0) should be false");
     assertEqual(await isPrime(1), false, "isPrime(1) should be false");
     assertEqual(await isPrime(2), true, "isPrime(2) should be true");
-
+    
     // Small prime and composite numbers
     assertEqual(await isPrime(3), true, "isPrime(3) should be true");
     assertEqual(await isPrime(4), false, "isPrime(4) should be false");
     assertEqual(await isPrime(5), true, "isPrime(5) should be true");
     assertEqual(await isPrime(9), false, "isPrime(9) should be false");
+    assertEqual(await isPrime(15), false, "isPrime(15) should be false");
+    assertEqual(await isPrime(29), true, "isPrime(29) should be true");
 
     // Even and odd numbers
     assertEqual(await isPrime(10), false, "isPrime(10) should be false");
     assertEqual(await isPrime(11), true, "isPrime(11) should be true");
-
+    assertEqual(await isPrime(25), false, "isPrime(25) should be false");
+    assertEqual(await isPrime(31), true, "isPrime(31) should be true");
+    
     // Large prime and composite numbers
     assertEqual(await isPrime(1000), false, "isPrime(1000) should be false");
     assertEqual(await isPrime(1009), true, "isPrime(1009) should be true");
     assertEqual(await isPrime(1223), true, "isPrime(1223) should be true");
+    assertEqual(await isPrime(2003), true, "isPrime(2003) should be true");
+    assertEqual(await isPrime(2023), false, "isPrime(2023) should be false");
+    assertEqual(await isPrime(7919), true, "isPrime(7919) should be true");
+
+    // Very large prime and composite numbers
+    assertEqual(await isPrime(104729), true, "isPrime(104729) should be true");
+    assertEqual(await isPrime(1299709), true, "isPrime(1299709) should be true");
+    assertEqual(await isPrime(5000000), false, "isPrime(5000000) should be false");
 
     // Caching Test
     console.log("🔹 Testing caching in isPrime()...");
@@ -95,8 +107,23 @@ function measureExecutionTime(fn, args) {
     console.log("🔹 Testing getPrimes()...");
     assertArrayEqual(await getPrimes(10), [2, 3, 5, 7], "getPrimes(10) should return [2, 3, 5, 7]");
     assertArrayEqual(await getPrimes(20), [2, 3, 5, 7, 11, 13, 17, 19], "getPrimes(20) should return correct primes");
+    assertArrayEqual(await getPrimes(30), [2, 3, 5, 7, 11, 13, 17, 19, 23, 29], "getPrimes(30) should return correct primes");
     assertEqual((await getPrimes(50)).length, 15, "getPrimes(50) should return 15 primes");
     assertEqual((await getPrimes(100)).length, 25, "getPrimes(100) should return 25 primes");
+
+    // Caching Test for getPrimes
+    console.log("🔹 Testing caching in getPrimes(6000000)...");
+    const firstExecutionPrimes = measureExecutionTime(await getPrimes, [6000000]);
+    console.log(\`⏳ First execution time: \${firstExecutionPrimes.time.toFixed(3)}ms\`);
+
+    const cachedExecutionPrimes = measureExecutionTime(await getPrimes, [6000000]);
+    console.log(\`⚡ Cached execution time: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
+
+    if (cachedExecutionPrimes.time < firstExecutionPrimes.time) {
+        console.log(\`✅ Caching works! First: \${firstExecutionPrimes.time.toFixed(3)}ms → Cached: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
+    } else {
+        console.error(\`❌ Caching failed! Cached execution was slower or equal (\${cachedExecutionPrimes.time.toFixed(3)}ms)\`);
+    }
 
     console.log("🔹 Testing iterPrimes()...");
     const generator = iterPrimes();
@@ -107,10 +134,10 @@ function measureExecutionTime(fn, args) {
 
     // Checking large prime numbers
     let lastPrime;
-    for (let i = 4; i < 100; i++) {
+    for (let i = 4; i < 200; i++) {
         lastPrime = generator.next().value;
     }
-    assertEqual(lastPrime, 541, "iterPrimes should generate the 100th prime 541");
+    assertEqual(lastPrime, 1223, "iterPrimes should generate the 200th prime 1223");
 
     console.log("🔹 Testing error handling...");
     try {
@@ -119,6 +146,14 @@ function measureExecutionTime(fn, args) {
         process.exit(1);
     } catch (e) {
         console.log("✅ isPrime(-1) correctly threw an error");
+    }
+
+    try {
+        await isPrime(3.3);
+        console.error("❌ isPrime(3.3) did not throw an error!");
+        process.exit(1);
+    } catch (e) {
+        console.log("✅ isPrime(3.3) correctly threw an error");
     }
 
     try {
