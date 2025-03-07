@@ -52,9 +52,7 @@ export async function isPrime(n) {
         if (n % d === 0) return false;
         d += 2;
     }
-
-    cachedPrimes.push(n);
-    primeSet.add(n);
+    getPrimes(n);
     return true;
 }
 
