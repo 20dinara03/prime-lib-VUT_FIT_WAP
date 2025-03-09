@@ -63,7 +63,7 @@ export async function isPrime(n) {
  * - A boolean array (`sieve`) is created where `true` means "prime candidate."
  * - Starting from `2`, all multiples of known primes are marked as non-prime.
  * - The algorithm runs in **O(n log log n)** time, making it efficient for large `n`.
- * - If the cache already contains primes ≤ `n`, only new primes are computed.
+ * - If the cache already contains primes <= `n`, only new primes are computed.
  *
  * @async
  * @param {number} n - The upper limit for prime computation. Must be an integer >= 0.
