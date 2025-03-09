@@ -10,24 +10,46 @@ fi
 
 echo "Running the tests..."
 
+# Check if the terminal supports colors
+if [[ -t 1 ]] && [[ "$TERM" != "dumb" ]] && tput setaf 1 &>/dev/null; then
+    RED="\u001b[31m"
+    GREEN="\u001b[32m"
+    YELLOW="\u001b[33m"
+    BLUE="\u001b[34m"
+    RESET="\u001b[0m"
+else
+    RED=""
+    GREEN=""
+    YELLOW=""
+    BLUE=""
+    RESET=""
+fi
+
 # Run tests with ES module support
 node --input-type=module <<EOF
 'use strict'
 import { isPrime, getPrimes, iterPrimes } from './primes.mjs';
 import { performance } from 'perf_hooks'; // Import for measuring execution time
 
+// Define color codes based on terminal support
+const RED = "${RED}";
+const GREEN = "${GREEN}";
+const YELLOW = "${YELLOW}";
+const BLUE = "${BLUE}";
+const RESET = "${RESET}";
+
 function assertEqual(actual, expected, testName) {
     if (actual !== expected) {
-        console.error(\`❌ \${testName} - FAIL (Expected: \${expected}, Received: \${actual})\`);
+        console.error(\`\${RED}FAIL:\${RESET} \${testName} (Expected: \${expected}, Received: \${actual})\`);
         process.exit(1);
     } else {
-        console.log(\`✅ \${testName} - OK\`);
+        console.log(\`\${GREEN}PASS:\${RESET} \${testName}\`);
     }
 }
 
 function assertArrayEqual(actual, expected, testName) {
     if (actual.length !== expected.length) {
-        console.error(\`❌ \${testName} - FAIL (Different lengths: Expected \${expected.length}, Received: \${actual.length})\`);
+        console.error(\`\${RED}FAIL:\${RESET} \${testName} (Different lengths: Expected \${expected.length}, Received \${actual.length})\`);
         console.error(\`Expected: \${expected.join(", ")}\`);
         console.error(\`Received: \${actual.join(", ")}\`);
         process.exit(1);
@@ -35,14 +57,14 @@ function assertArrayEqual(actual, expected, testName) {
 
     for (let i = 0; i < expected.length; i++) {
         if (actual[i] !== expected[i]) {
-            console.error(\`❌ \${testName} - FAIL (Mismatch at index \${i})\`);
+            console.error(\`\${RED}FAIL:\${RESET} \${testName} (Mismatch at index \${i})\`);
             console.error(\`Expected: \${expected.join(", ")}\`);
             console.error(\`Received: \${actual.join(", ")}\`);
             process.exit(1);
         }
     }
 
-    console.log(\`✅ \${testName} - OK\`);
+    console.log(\`\${GREEN}PASS:\${RESET} \${testName}\`);
 }
 
 function measureExecutionTime(fn, args) {
@@ -53,7 +75,7 @@ function measureExecutionTime(fn, args) {
 }
 
 (async function() {
-    console.log("🔹 Testing isPrime()...");
+    console.log(\`\${BLUE}Testing isPrime()...\${RESET}\`);
    // Edge cases
     assertEqual(await isPrime(0), false, "isPrime(0) should be false");
     assertEqual(await isPrime(1), false, "isPrime(1) should be false");
@@ -87,24 +109,24 @@ function measureExecutionTime(fn, args) {
     assertEqual(await isPrime(5000000), false, "isPrime(5000000) should be false");
 
     // Caching Test
-    console.log("🔹 Testing caching in isPrime()...");
+    console.log(\`\${BLUE}Testing caching in isPrime()...\${RESET}\`);
     const firstExecution = measureExecutionTime(await isPrime, [1009]);
-    console.log(\`⏳ First execution time: \${firstExecution.time.toFixed(3)}ms\`);
+    console.log(\`\${YELLOW}First execution time:\${RESET} \${firstExecution.time.toFixed(3)}ms\`);
 
     const cachedExecution = measureExecutionTime(await isPrime, [1009]);
-    console.log(\`⚡ Cached execution time: \${cachedExecution.time.toFixed(3)}ms\`);
+    console.log(\`\${YELLOW}Cached execution time:\${RESET} \${cachedExecution.time.toFixed(3)}ms\`);
 
     if (cachedExecution.time < firstExecution.time) {
-        console.log(\`✅ Caching works! First: \${firstExecution.time.toFixed(3)}ms → Cached: \${cachedExecution.time.toFixed(3)}ms\`);
+        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecution.time.toFixed(3)}ms → Cached: \${cachedExecution.time.toFixed(3)}ms\`);
     } else {
-        console.error(\`❌ Caching failed! Cached execution was slower or equal (\${cachedExecution.time.toFixed(3)}ms)\`);
+        console.error(\`\${RED}Caching failed!\${RESET} Cached execution was slower or equal (\${cachedExecution.time.toFixed(3)}ms)\`);
     }
 
     // More tests
     assertEqual(await isPrime(1009), true, "isPrime(1009) should be true");
     assertEqual(await isPrime(104729), true, "isPrime(104729) should be true");
 
-    console.log("🔹 Testing getPrimes()...");
+    console.log(\`\${BLUE}Testing getPrimes()...\${RESET}\`);
     assertArrayEqual(await getPrimes(10), [2, 3, 5, 7], "getPrimes(10) should return [2, 3, 5, 7]");
     assertArrayEqual(await getPrimes(20), [2, 3, 5, 7, 11, 13, 17, 19], "getPrimes(20) should return correct primes");
     assertArrayEqual(await getPrimes(30), [2, 3, 5, 7, 11, 13, 17, 19, 23, 29], "getPrimes(30) should return correct primes");
@@ -112,20 +134,20 @@ function measureExecutionTime(fn, args) {
     assertEqual((await getPrimes(100)).length, 25, "getPrimes(100) should return 25 primes");
 
     // Caching Test for getPrimes
-    console.log("🔹 Testing caching in getPrimes(6000000)...");
+    console.log(\`\${BLUE}Testing caching in getPrimes(6000000)...\${RESET}\`);
     const firstExecutionPrimes = measureExecutionTime(await getPrimes, [6000000]);
-    console.log(\`⏳ First execution time: \${firstExecutionPrimes.time.toFixed(3)}ms\`);
+    console.log(\`\${YELLOW}First execution time:\${RESET} \${firstExecutionPrimes.time.toFixed(3)}ms\`);
 
     const cachedExecutionPrimes = measureExecutionTime(await getPrimes, [6000000]);
-    console.log(\`⚡ Cached execution time: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
+    console.log(\`\${YELLOW}Cached execution time:\${RESET} \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
 
     if (cachedExecutionPrimes.time < firstExecutionPrimes.time) {
-        console.log(\`✅ Caching works! First: \${firstExecutionPrimes.time.toFixed(3)}ms → Cached: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
+        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecutionPrimes.time.toFixed(3)}ms → Cached: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
     } else {
-        console.error(\`❌ Caching failed! Cached execution was slower or equal (\${cachedExecutionPrimes.time.toFixed(3)}ms)\`);
+        console.error(\`\${RED}Caching failed!\${RESET} Cached execution was slower or equal (\${cachedExecutionPrimes.time.toFixed(3)}ms)\`);
     }
 
-    console.log("🔹 Testing iterPrimes()...");
+    console.log(\`\${BLUE}Testing iterPrimes()...\${RESET}\`);
     const generator = iterPrimes();
     assertEqual(generator.next().value, 2, "iterPrimes first prime should be 2");
     assertEqual(generator.next().value, 3, "iterPrimes second prime should be 3");
@@ -139,39 +161,39 @@ function measureExecutionTime(fn, args) {
     }
     assertEqual(lastPrime, 1223, "iterPrimes should generate the 200th prime 1223");
 
-    console.log("🔹 Testing error handling...");
+    console.log(\`\${BLUE}Testing error handling...\${RESET}\`);
     try {
         await isPrime(-1);
-        console.error("❌ isPrime(-1) did not throw an error!");
+        console.error(\`\${RED}FAIL:\${RESET} isPrime(-1) did not throw an error!\`);
         process.exit(1);
     } catch (e) {
-        console.log("✅ isPrime(-1) correctly threw an error");
+        console.log(\`\${GREEN}PASS:\${RESET} isPrime(-1) correctly threw an error\`);
     }
 
     try {
         await isPrime(3.3);
-        console.error("❌ isPrime(3.3) did not throw an error!");
+        console.error(\`\${RED}FAIL:\${RESET} isPrime(3.3) did not throw an error!\`);
         process.exit(1);
     } catch (e) {
-        console.log("✅ isPrime(3.3) correctly threw an error");
+        console.log(\`\${GREEN}PASS:\${RESET} isPrime(3.3) correctly threw an error\`);
     }
 
     try {
         await getPrimes(-10);
-        console.error("❌ getPrimes(-10) did not throw an error!");
+        console.error(\`\${RED}FAIL:\${RESET} getPrimes(-10) did not throw an error!\`);
         process.exit(1);
     } catch (e) {
-        console.log("✅ getPrimes(-10) correctly threw an error");
+        console.log(\`\${GREEN}PASS:\${RESET} getPrimes(-10) correctly threw an error\`);
     }
 
     try {
         await isPrime("hello");
-        console.error("❌ isPrime('hello') did not throw an error!");
+        console.error(\`\${RED}FAIL:\${RESET} getPrimes("hello") did not throw an error!\`);
         process.exit(1);
     } catch (e) {
-        console.log("✅ isPrime('hello') correctly threw an error");
+        console.log(\`\${GREEN}PASS:\${RESET} getPrimes("hello") correctly threw an error\`);
     }
 
-    console.log("🎉 All tests passed!");
+    console.log(\`\${GREEN}All tests passed! \${RESET}\`);
 })();
 EOF
