@@ -117,7 +117,7 @@ function measureExecutionTime(fn, args) {
     console.log(\`\${YELLOW}Cached execution time:\${RESET} \${cachedExecution.time.toFixed(3)}ms\`);
 
     if (cachedExecution.time < firstExecution.time) {
-        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecution.time.toFixed(3)}ms → Cached: \${cachedExecution.time.toFixed(3)}ms\`);
+        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecution.time.toFixed(3)}ms -> Cached: \${cachedExecution.time.toFixed(3)}ms\`);
     } else {
         console.error(\`\${RED}Caching failed!\${RESET} Cached execution was slower or equal (\${cachedExecution.time.toFixed(3)}ms)\`);
     }
@@ -142,7 +142,7 @@ function measureExecutionTime(fn, args) {
     console.log(\`\${YELLOW}Cached execution time:\${RESET} \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
 
     if (cachedExecutionPrimes.time < firstExecutionPrimes.time) {
-        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecutionPrimes.time.toFixed(3)}ms → Cached: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
+        console.log(\`\${GREEN}Caching works!\${RESET} First: \${firstExecutionPrimes.time.toFixed(3)}ms -> Cached: \${cachedExecutionPrimes.time.toFixed(3)}ms\`);
     } else {
         console.error(\`\${RED}Caching failed!\${RESET} Cached execution was slower or equal (\${cachedExecutionPrimes.time.toFixed(3)}ms)\`);
     }
