@@ -25,14 +25,8 @@ fi
 
 echo "Generating documentation for primes.mjs..."
 
-# Create a temporary .js copy of the module
-cp primes.mjs primes.js
-
 # Run JSDoc to generate documentation
-npx jsdoc primes.js -d docs --verbose
-
-# Remove the temporary .js file after documentation is generated
-rm primes.js
+npx jsdoc primes.mjs -d docs --verbose --configure <(echo '{"source": {"includePattern": ".+\\.(mjs|js)$"}}')
 
 # Check if documentation was successfully created
 if [ -d "docs" ]; then
